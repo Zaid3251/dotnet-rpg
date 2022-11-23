@@ -27,8 +27,26 @@ namespace dotnet_rpg.Services.CharacterService
             character.Id = characters.Max(c => c.Id) + 1;
             characters.Add(character);
             serviceResponse.Data = characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
-
             return serviceResponse;
+        }
+
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+        {
+             ServiceResponse<List<GetCharacterDto>> response = new ServiceResponse<List<GetCharacterDto>>();
+            try
+            {
+                Character character = characters.FirstOrDefault(c => c.Id == id);
+                characters.Remove(character);
+                response.Data=characters.Select(c=>_mapper.Map<GetCharacterDto>(c)).ToList();
+            }
+            catch (Exception ex)
+            {
+                response.Success = false;
+                response.Message = ex.Message;
+
+            }
+            return response;
+
         }
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
@@ -52,9 +70,7 @@ namespace dotnet_rpg.Services.CharacterService
             ServiceResponse<GetCharacterDto> response = new ServiceResponse<GetCharacterDto>();
             try
             {
-
                 Character character = characters.FirstOrDefault(c => c.Id == updateCharacter.Id);
-
                 _mapper.Map(updateCharacter, character);
                 // character.Name = updateCharacter.Name;
                 // character.HitPoints = updateCharacter.HitPoints;
