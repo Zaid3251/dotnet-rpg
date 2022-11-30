@@ -24,13 +24,11 @@ namespace dotnet_rpg.Controllers
 
         }
 
-        [AllowAnonymous]
+        // [AllowAnonymous]
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<List<GetCharacterDto>>>> Get()
         {
-            int userId=int.Parse(User.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier).Value);
-
-            return Ok(await _characterservice.GetAllCharacters(userId));
+            return Ok(await _characterservice.GetAllCharacters());
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ServiceResponse<GetCharacterDto>>> GetSingle(int id)
